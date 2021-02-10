@@ -22,7 +22,13 @@ def extract_from_netcdf(input_nc: str, reach_id: str):
         exit(1)
 
     index_rch = np.argmax(DS.rchid.values == reach_id)
-    print(index_rch)
+    print("Reach found...")
     # TODO: the dimensions of the variable are hardcoded for NZWaM output
-    values = DS[variable_name][:, index_rch, 0, 0].to_pandas()
+    values = DS[variable_name][:, index_rch, 0, 0].to_dataframe()
+    # Cleaning the column names
+    values.rename(columns={"time": "date", variable_name: "flow"}, inplace=True)
+
     values.to_csv(output_file_csv)
+    print("Writing file {}".format(output_file_csv))
+
+
